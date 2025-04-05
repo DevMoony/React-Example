@@ -4,45 +4,19 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
-import Projects from "@/pages/Projects";
-import Team from "@/pages/Team";
+import AfkUsers from "@/pages/Projects"; // Now holds AFK users
+import Team from "@/pages/Team"; // Team page now has Boosters
 import Settings from "@/pages/Settings";
+import Leaderboard from "@/pages/Leaderboard";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-// Create temporary components for the new pages
-const Leaderboard = () => (
-  <div className="py-6">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-gray-900">User Leaderboard</h1>
-      <p className="mt-4">This page is under construction. Check back later for the full leaderboard.</p>
-    </div>
-  </div>
-);
-
-const Boosters = () => (
-  <div className="py-6">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-gray-900">Server Boosters</h1>
-      <p className="mt-4">This page is under construction. Check back later to see server boosters.</p>
-    </div>
-  </div>
-);
-
-const AFKList = () => (
-  <div className="py-6">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-gray-900">AFK Users</h1>
-      <p className="mt-4">This page is under construction. Check back later to see the AFK users list.</p>
-    </div>
-  </div>
-);
-
+// Commands page placeholder
 const Commands = () => (
   <div className="py-6">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-gray-900">Bot Commands</h1>
-      <p className="mt-4">This page is under construction. Check back later to see all available bot commands.</p>
+      <h1 className="text-2xl font-semibold bg-gradient-to-r from-indigo-400 to-purple-500 text-transparent bg-clip-text">Bot Commands</h1>
+      <p className="mt-4 text-muted-foreground">This page is under construction. Check back later to see all available bot commands.</p>
     </div>
   </div>
 );
@@ -52,10 +26,9 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/leaderboard" component={Leaderboard} />
-      <Route path="/boosters" component={Boosters} />
-      <Route path="/afk" component={AFKList} />
+      <Route path="/team" component={Team} /> {/* Team page now includes Boosters */}
+      <Route path="/afk" component={AfkUsers} />
       <Route path="/commands" component={Commands} />
-      <Route path="/team" component={Team} />
       <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
