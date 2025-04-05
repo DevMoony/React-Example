@@ -1,9 +1,18 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { HandMetal, CheckCircleIcon, MessageSquareIcon } from "lucide-react";
+import { 
+  Terminal, 
+  ArrowUpCircle, 
+  ServerCrash, 
+  Sparkles, 
+  MessageSquareIcon, 
+  HandMetal, 
+  CheckCircleIcon 
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ActivityType } from "@/types";
 
 interface ActivityItemProps {
-  type: "user-action" | "status-change" | "comment";
+  type: "user-action" | "status-change" | "comment" | ActivityType;
   user?: string;
   action?: string;
   target?: string;
@@ -14,6 +23,30 @@ interface ActivityItemProps {
 const ActivityItem = ({ type, user, action, target, note, time }: ActivityItemProps) => {
   const renderIcon = () => {
     switch (type) {
+      case "command-used":
+        return (
+          <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+            <Terminal className="h-5 w-5 text-indigo-600" />
+          </div>
+        );
+      case "level-up":
+        return (
+          <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
+            <ArrowUpCircle className="h-5 w-5 text-yellow-600" />
+          </div>
+        );
+      case "server-joined":
+        return (
+          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+            <ServerCrash className="h-5 w-5 text-green-600" />
+          </div>
+        );
+      case "bot-update":
+        return (
+          <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+            <Sparkles className="h-5 w-5 text-purple-600" />
+          </div>
+        );
       case "user-action":
         return (
           <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
@@ -23,20 +56,82 @@ const ActivityItem = ({ type, user, action, target, note, time }: ActivityItemPr
       case "status-change":
         return (
           <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-            <CheckCircleIcon className="h-5 w-5 text-[#10B981]" />
+            <CheckCircleIcon className="h-5 w-5 text-green-600" />
           </div>
         );
       case "comment":
         return (
           <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-            <MessageSquareIcon className="h-5 w-5 text-[#8B5CF6]" />
+            <MessageSquareIcon className="h-5 w-5 text-purple-600" />
           </div>
         );
       default:
         return (
-          <Avatar className="h-10 w-10">
+          <Avatar className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-purple-600">
             <AvatarFallback>?</AvatarFallback>
           </Avatar>
+        );
+    }
+  };
+
+  const renderContent = () => {
+    switch(type) {
+      case "command-used":
+        return (
+          <p className="text-sm text-gray-900">
+            <span className="font-medium text-gray-900">{user}</span> used command{" "}
+            <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm font-mono text-primary">{action}</code>
+            {target && <span> in {target}</span>}
+          </p>
+        );
+      case "level-up":
+        return (
+          <p className="text-sm text-gray-900">
+            <span className="font-medium text-gray-900">{user}</span> leveled up to{" "}
+            <span className="font-medium text-purple-600">Level {target}</span>
+            {note && <span className="block mt-1 text-xs text-gray-500">{note}</span>}
+          </p>
+        );
+      case "server-joined":
+        return (
+          <p className="text-sm text-gray-900">
+            Bot was added to server{" "}
+            <span className="font-medium text-primary">{target}</span>
+            {note && <span className="block mt-1 text-xs text-gray-500">{note}</span>}
+          </p>
+        );
+      case "bot-update":
+        return (
+          <p className="text-sm text-gray-900">
+            <span className="font-medium text-purple-600">Bot updated</span> to version {target}
+            {note && <span className="block mt-1 text-xs text-gray-500">{note}</span>}
+          </p>
+        );
+      case "user-action":
+        return (
+          <p className="text-sm text-gray-900">
+            <span className="font-medium text-gray-900">{user}</span> {action}{" "}
+            <span className="font-medium text-primary">{target}</span>
+          </p>
+        );
+      case "status-change":
+        return (
+          <p className="text-sm text-gray-900">
+            <span className="font-medium text-gray-900">{note}</span>
+          </p>
+        );
+      case "comment":
+        return (
+          <p className="text-sm text-gray-900">
+            <span className="font-medium text-gray-900">{user}</span> {action}{" "}
+            <span className="font-medium text-primary">{target}</span>
+          </p>
+        );
+      default:
+        return (
+          <p className="text-sm text-gray-900">
+            <span className="font-medium text-gray-900">{note || "Unknown activity"}</span>
+          </p>
         );
     }
   };
@@ -48,23 +143,7 @@ const ActivityItem = ({ type, user, action, target, note, time }: ActivityItemPr
           {renderIcon()}
         </div>
         <div className="min-w-0 flex-1">
-          {type === "user-action" && (
-            <p className="text-sm text-gray-900">
-              <a href="#" className="font-medium text-gray-900">{user}</a> {action}{" "}
-              <a href="#" className="font-medium text-primary">{target}</a>
-            </p>
-          )}
-          {type === "status-change" && (
-            <p className="text-sm text-gray-900">
-              <span className="font-medium text-gray-900">{note}</span>
-            </p>
-          )}
-          {type === "comment" && (
-            <p className="text-sm text-gray-900">
-              <a href="#" className="font-medium text-gray-900">{user}</a> {action}{" "}
-              <a href="#" className="font-medium text-primary">{target}</a>
-            </p>
-          )}
+          {renderContent()}
           <p className="text-sm text-gray-500">{time}</p>
         </div>
       </div>

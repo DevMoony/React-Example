@@ -7,15 +7,52 @@ export interface Stat {
   trend: 'up' | 'down' | 'neutral';
 }
 
-export interface Project {
+// Leaderboard types
+export interface LeaderboardUser {
   id: number;
-  name: string;
-  updatedAt: string;
-  status: string;
+  username: string;
+  level: number;
+  xp: number;
+  xpNeeded: number;
+  avatar?: string;
+  rank: number;
   colorClass: string;
 }
 
-export type ActivityType = 'user-action' | 'status-change' | 'comment';
+// Booster types
+export interface Booster {
+  id: number;
+  username: string;
+  boostTier: number;
+  boostDuration: string;
+  avatar?: string;
+  initials: string;
+  perks: string[];
+  colorClass: string;
+}
+
+// AFK types
+export interface AfkUser {
+  id: number;
+  username: string;
+  afkDuration: string;
+  reason?: string;
+  avatar?: string;
+  initials: string;
+  colorClass: string;
+}
+
+// Command types
+export interface BotCommand {
+  id: number;
+  name: string;
+  description: string;
+  usage: string;
+  category: 'moderation' | 'customization' | 'fun' | 'utility';
+  examples?: string[];
+}
+
+export type ActivityType = 'command-used' | 'level-up' | 'server-joined' | 'bot-update';
 
 export interface Activity {
   id: number;
@@ -27,7 +64,17 @@ export interface Activity {
   time: string;
 }
 
-// Team types
+// Server types
+export interface ServerStat {
+  id: number;
+  name: string;
+  memberCount: number;
+  botPrefix: string;
+  features: string[];
+  icon?: string;
+}
+
+// Team types (for bot developers)
 export interface TeamMember {
   id: number;
   name: string;
