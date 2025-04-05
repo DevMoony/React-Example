@@ -4,9 +4,9 @@ import {
   ArrowUpCircle, 
   ServerCrash, 
   Sparkles, 
-  MessageSquareIcon, 
+  MessageSquare, 
   HandMetal, 
-  CheckCircleIcon 
+  CheckCircle 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ActivityType } from "@/types";
@@ -56,13 +56,13 @@ const ActivityItem = ({ type, user, action, target, note, time }: ActivityItemPr
       case "status-change":
         return (
           <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-            <CheckCircleIcon className="h-5 w-5 text-green-600" />
+            <CheckCircle className="h-5 w-5 text-green-600" />
           </div>
         );
       case "comment":
         return (
           <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-            <MessageSquareIcon className="h-5 w-5 text-purple-600" />
+            <MessageSquare className="h-5 w-5 text-purple-600" />
           </div>
         );
       default:
@@ -78,73 +78,73 @@ const ActivityItem = ({ type, user, action, target, note, time }: ActivityItemPr
     switch(type) {
       case "command-used":
         return (
-          <p className="text-sm text-gray-900">
-            <span className="font-medium text-gray-900">{user}</span> used command{" "}
-            <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm font-mono text-primary">{action}</code>
+          <p className="text-sm">
+            <span className="font-medium">{user}</span> used command{" "}
+            <code className="px-1.5 py-0.5 bg-slate-800 rounded text-sm font-mono text-primary">{action}</code>
             {target && <span> in {target}</span>}
           </p>
         );
       case "level-up":
         return (
-          <p className="text-sm text-gray-900">
-            <span className="font-medium text-gray-900">{user}</span> leveled up to{" "}
-            <span className="font-medium text-purple-600">Level {target}</span>
-            {note && <span className="block mt-1 text-xs text-gray-500">{note}</span>}
+          <p className="text-sm">
+            <span className="font-medium">{user}</span> leveled up to{" "}
+            <span className="font-medium text-purple-500">Level {target}</span>
+            {note && <span className="block mt-1 text-xs text-muted-foreground">{note}</span>}
           </p>
         );
       case "server-joined":
         return (
-          <p className="text-sm text-gray-900">
+          <p className="text-sm">
             Bot was added to server{" "}
             <span className="font-medium text-primary">{target}</span>
-            {note && <span className="block mt-1 text-xs text-gray-500">{note}</span>}
+            {note && <span className="block mt-1 text-xs text-muted-foreground">{note}</span>}
           </p>
         );
       case "bot-update":
         return (
-          <p className="text-sm text-gray-900">
-            <span className="font-medium text-purple-600">Bot updated</span> to version {target}
-            {note && <span className="block mt-1 text-xs text-gray-500">{note}</span>}
+          <p className="text-sm">
+            <span className="font-medium text-purple-500">Bot updated</span> to version {target}
+            {note && <span className="block mt-1 text-xs text-muted-foreground">{note}</span>}
           </p>
         );
       case "user-action":
         return (
-          <p className="text-sm text-gray-900">
-            <span className="font-medium text-gray-900">{user}</span> {action}{" "}
+          <p className="text-sm">
+            <span className="font-medium">{user}</span> {action}{" "}
             <span className="font-medium text-primary">{target}</span>
           </p>
         );
       case "status-change":
         return (
-          <p className="text-sm text-gray-900">
-            <span className="font-medium text-gray-900">{note}</span>
+          <p className="text-sm">
+            <span className="font-medium">{note}</span>
           </p>
         );
       case "comment":
         return (
-          <p className="text-sm text-gray-900">
-            <span className="font-medium text-gray-900">{user}</span> {action}{" "}
+          <p className="text-sm">
+            <span className="font-medium">{user}</span> {action}{" "}
             <span className="font-medium text-primary">{target}</span>
           </p>
         );
       default:
         return (
-          <p className="text-sm text-gray-900">
-            <span className="font-medium text-gray-900">{note || "Unknown activity"}</span>
+          <p className="text-sm">
+            <span className="font-medium">{note || "Unknown activity"}</span>
           </p>
         );
     }
   };
 
   return (
-    <li className="px-4 py-4 sm:px-6 hover:bg-gray-50">
+    <li className="px-4 py-4 sm:px-6 hover:bg-slate-900/30">
       <div className="flex space-x-3">
         <div className="flex-shrink-0">
           {renderIcon()}
         </div>
         <div className="min-w-0 flex-1">
           {renderContent()}
-          <p className="text-sm text-gray-500">{time}</p>
+          <p className="text-sm text-muted-foreground">{time}</p>
         </div>
       </div>
     </li>
