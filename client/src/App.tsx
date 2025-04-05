@@ -26,7 +26,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/leaderboard" component={Leaderboard} />
-      <Route path="/team" component={Team} /> {/* Team page now includes Boosters */}
+      <Route path="/boosters" component={Team} /> {/* Team page now includes Boosters */}
+      <Route path="/team" component={Team} /> {/* Also keep the /team route for backwards compatibility */}
       <Route path="/afk" component={AfkUsers} />
       <Route path="/commands" component={Commands} />
       <Route path="/settings" component={Settings} />
