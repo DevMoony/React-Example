@@ -13,13 +13,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Discord bot specific routes
+  // Discord bot specific routes - Leaderboard CRUD operations
   app.get("/api/leaderboard", async (_req, res) => {
     try {
       const leaderboard = await storage.getLeaderboard();
       res.json(leaderboard);
     } catch (error) {
       res.status(500).json({ message: "Error fetching leaderboard" });
+    }
+  });
+  
+  // Get a specific leaderboard user by ID
+  app.get("/api/leaderboard/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      const user = await storage.getLeaderboardUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching leaderboard user" });
+    }
+  });
+  
+  // Add a new user to the leaderboard
+  app.post("/api/leaderboard", async (req, res) => {
+    try {
+      // Basic validation
+      if (!req.body.username) {
+        return res.status(400).json({ message: "Username is required" });
+      }
+      
+      const newUser = await storage.addLeaderboardUser(req.body);
+      res.status(201).json(newUser);
+    } catch (error) {
+      res.status(500).json({ message: "Error adding leaderboard user" });
+    }
+  });
+  
+  // Update a leaderboard user
+  app.patch("/api/leaderboard/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      // Don't allow changing the ID
+      const userData = { ...req.body };
+      delete userData.id;
+      
+      const updatedUser = await storage.updateLeaderboardUser(id, userData);
+      res.json(updatedUser);
+    } catch (error: any) {
+      // If user not found, return 404
+      if (error.message && error.message.includes("not found")) {
+        return res.status(404).json({ message: error.message });
+      }
+      res.status(500).json({ message: "Error updating leaderboard user" });
+    }
+  });
+  
+  // Delete a leaderboard user
+  app.delete("/api/leaderboard/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      const success = await storage.deleteLeaderboardUser(id);
+      if (!success) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting leaderboard user" });
     }
   });
 

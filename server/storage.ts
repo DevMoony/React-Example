@@ -8,6 +8,10 @@ export interface IStorage {
   getStats(): Promise<any[]>;
   getProjects(): Promise<any[]>;
   getLeaderboard(): Promise<any[]>;
+  getLeaderboardUser(id: number): Promise<any | undefined>;
+  addLeaderboardUser(userData: any): Promise<any>;
+  updateLeaderboardUser(id: number, userData: any): Promise<any>;
+  deleteLeaderboardUser(id: number): Promise<boolean>;
   getBoosters(): Promise<any[]>;
   getAfkUsers(): Promise<any[]>;
   getBotCommands(): Promise<any[]>;
@@ -163,6 +167,115 @@ export class MemStorage implements IStorage {
 
   async getLeaderboard(): Promise<any[]> {
     return this.leaderboard;
+  }
+  
+  async getLeaderboardUser(id: number): Promise<any | undefined> {
+    return this.leaderboard.find(user => user.id === id);
+  }
+  
+  async addLeaderboardUser(userData: any): Promise<any> {
+    // Determine the next ID
+    const nextId = this.leaderboard.length > 0 
+      ? Math.max(...this.leaderboard.map(user => user.id)) + 1 
+      : 1;
+    
+    // Create a new user with the given data and sensible defaults
+    const newUser = {
+      id: nextId,
+      username: userData.username,
+      level: userData.level || 1,
+      xp: userData.xp || 0,
+      xpNeeded: userData.xpNeeded || 1000,
+      rank: this.leaderboard.length + 1, // Initially assign rank based on array position
+      colorClass: userData.colorClass || "blue"
+    };
+    
+    // Add the user to the leaderboard
+    this.leaderboard.push(newUser);
+    
+    // Re-rank all users (sort by level and XP)
+    this.recalculateRanks();
+    
+    // Add an activity for this
+    const activityId = this.currentActivityId++;
+    const activity = {
+      id: activityId,
+      type: "server-joined",
+      user: newUser.username,
+      note: `${newUser.username} joined the server`,
+      time: "just now"
+    };
+    this.activities.unshift(activity);
+    
+    return newUser;
+  }
+  
+  async updateLeaderboardUser(id: number, userData: any): Promise<any> {
+    // Find the user
+    const userIndex = this.leaderboard.findIndex(user => user.id === id);
+    if (userIndex === -1) {
+      throw new Error(`User with ID ${id} not found`);
+    }
+    
+    // Update the user data
+    const user = this.leaderboard[userIndex];
+    const updatedUser = {
+      ...user,
+      ...userData,
+      id: user.id // Ensure ID doesn't change
+    };
+    
+    this.leaderboard[userIndex] = updatedUser;
+    
+    // Recalculate ranks if level or XP changed
+    if (userData.level !== undefined || userData.xp !== undefined) {
+      this.recalculateRanks();
+      
+      // Add a level-up activity if the level increased
+      if (userData.level !== undefined && userData.level > user.level) {
+        const activityId = this.currentActivityId++;
+        const activity = {
+          id: activityId,
+          type: "level-up",
+          user: updatedUser.username,
+          action: "leveled up to",
+          target: `Level ${updatedUser.level}`,
+          time: "just now"
+        };
+        this.activities.unshift(activity);
+      }
+    }
+    
+    return updatedUser;
+  }
+  
+  async deleteLeaderboardUser(id: number): Promise<boolean> {
+    const initialLength = this.leaderboard.length;
+    this.leaderboard = this.leaderboard.filter(user => user.id !== id);
+    
+    // If a user was removed, recalculate ranks
+    if (initialLength > this.leaderboard.length) {
+      this.recalculateRanks();
+      return true;
+    }
+    
+    return false;
+  }
+  
+  // Helper method to recalculate ranks based on level and XP
+  private recalculateRanks(): void {
+    // Sort by level (primary) and XP (secondary)
+    this.leaderboard.sort((a, b) => {
+      if (b.level !== a.level) {
+        return b.level - a.level;
+      }
+      return b.xp - a.xp;
+    });
+    
+    // Assign ranks
+    this.leaderboard.forEach((user, index) => {
+      user.rank = index + 1;
+    });
   }
 
   async getBoosters(): Promise<any[]> {
