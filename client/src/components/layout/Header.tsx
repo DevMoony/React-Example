@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import ProfileDropdown from "./ProfileDropdown";
+import { BASE_PATH } from "@/App";
 
 const Header = () => {
   const [location] = useLocation();
@@ -23,12 +24,12 @@ const Header = () => {
   };
 
   const navigationItems = [
-    { name: "Dashboard", href: "/", icon: <LayoutDashboard className="h-4 w-4 mr-1" /> },
-    { name: "Leaderboard", href: "/leaderboard", icon: <Trophy className="h-4 w-4 mr-1" /> },
-    { name: "Boosters", href: "/boosters", icon: <Zap className="h-4 w-4 mr-1" /> },
-    { name: "AFK List", href: "/afk", icon: <Clock className="h-4 w-4 mr-1" /> },
-    { name: "Commands", href: "/commands", icon: <Server className="h-4 w-4 mr-1" /> },
-    { name: "Settings", href: "/settings", icon: <Settings className="h-4 w-4 mr-1" /> },
+    { name: "Dashboard", href: `${BASE_PATH}/`, icon: <LayoutDashboard className="h-4 w-4 mr-1" /> },
+    { name: "Leaderboard", href: `${BASE_PATH}/leaderboard`, icon: <Trophy className="h-4 w-4 mr-1" /> },
+    { name: "Boosters", href: `${BASE_PATH}/boosters`, icon: <Zap className="h-4 w-4 mr-1" /> },
+    { name: "AFK List", href: `${BASE_PATH}/afk`, icon: <Clock className="h-4 w-4 mr-1" /> },
+    { name: "Commands", href: `${BASE_PATH}/commands`, icon: <Server className="h-4 w-4 mr-1" /> },
+    { name: "Settings", href: `${BASE_PATH}/settings`, icon: <Settings className="h-4 w-4 mr-1" /> },
   ];
 
   return (
@@ -36,7 +37,7 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            <Link href={`${BASE_PATH}/`} className="flex-shrink-0 flex items-center">
               <Bot className="h-6 w-6 text-primary" />
               <span className="ml-2 text-xl font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">DiscordBot</span>
             </Link>

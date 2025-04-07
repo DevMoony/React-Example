@@ -13,8 +13,9 @@ const corsOptions = {
     // Development origins
     "http://localhost:5000", 
     "http://localhost:3000",
-    // Production origins - Add your GitHub Pages URL
-    "https://devmoony.github.io"
+    // Production origins - GitHub Pages URL with subdirectory
+    "https://devmoony.github.io",
+    "https://devmoony.github.io/unity-bot/dashboard"
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true,

@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useRouter } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -10,6 +10,10 @@ import Settings from "@/pages/Settings";
 import Leaderboard from "@/pages/Leaderboard";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+
+// Base path configuration for GitHub Pages
+// In production, this would be "/unity-bot/dashboard", in dev it's "/"
+export const BASE_PATH = import.meta.env.VITE_BASE_PATH || "";
 
 // Commands page placeholder
 const Commands = () => (
@@ -24,13 +28,13 @@ const Commands = () => (
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
-      <Route path="/leaderboard" component={Leaderboard} />
-      <Route path="/boosters" component={Team} /> {/* Team page now includes Boosters */}
-      <Route path="/team" component={Team} /> {/* Also keep the /team route for backwards compatibility */}
-      <Route path="/afk" component={AfkUsers} />
-      <Route path="/commands" component={Commands} />
-      <Route path="/settings" component={Settings} />
+      <Route path={`${BASE_PATH}/`} component={Dashboard} />
+      <Route path={`${BASE_PATH}/leaderboard`} component={Leaderboard} />
+      <Route path={`${BASE_PATH}/boosters`} component={Team} /> {/* Team page now includes Boosters */}
+      <Route path={`${BASE_PATH}/team`} component={Team} /> {/* Also keep the /team route for backwards compatibility */}
+      <Route path={`${BASE_PATH}/afk`} component={AfkUsers} />
+      <Route path={`${BASE_PATH}/commands`} component={Commands} />
+      <Route path={`${BASE_PATH}/settings`} component={Settings} />
       <Route component={NotFound} />
     </Switch>
   );
