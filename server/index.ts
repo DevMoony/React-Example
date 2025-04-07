@@ -1,10 +1,27 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// CORS configuration
+const corsOptions = {
+  origin: [
+    // Development origins
+    "http://localhost:5000", 
+    "http://localhost:3000",
+    // Production origins - Add your GitHub Pages URL
+    "https://devmoony.github.io"
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -56,15 +73,16 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // Use environment variable for port or default to 5000
+  // This allows the port to be configured in production environments
+  const port = process.env.PORT || 5000;
+  
   server.listen({
-    port,
+    port: Number(port),
     host: "0.0.0.0",
     reusePort: true,
   }, () => {
-    log(`serving on port ${port}`);
+    log(`API server running on port ${port}`);
+    log(`For production: Set up your GitHub Pages to connect to this API at ${process.env.API_URL || 'your-api-url'}`);
   });
 })();
